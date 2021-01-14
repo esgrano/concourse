@@ -858,10 +858,7 @@ tooltip session =
     case session.hovered of
         HoverState.Tooltip (Message.PipelineStatusIcon _ _) _ ->
             Just
-                { body =
-                    Html.div
-                        Styles.jobsDisabledTooltip
-                        [ Html.text "automatic job monitoring disabled" ]
+                { body = Html.text "automatic job monitoring disabled"
                 , attachPosition = { direction = Tooltip.Top, alignment = Tooltip.Start }
                 , arrow = Nothing
                 }
@@ -872,15 +869,12 @@ tooltip session =
                 |> Maybe.map
                     (\p ->
                         { body =
-                            Html.div
-                                Styles.visibilityTooltip
-                                [ Html.text <|
-                                    if p.public then
-                                        "hide pipeline"
+                            Html.text <|
+                                if p.public then
+                                    "hide pipeline"
 
-                                    else
-                                        "expose pipeline"
-                                ]
+                                else
+                                    "expose pipeline"
                         , attachPosition =
                             { direction = Tooltip.Top
                             , alignment = Tooltip.End
@@ -896,7 +890,7 @@ tooltip session =
                         Styles.jobPreviewTooltip
                         [ Html.text jobName ]
                 , attachPosition = { direction = Tooltip.Right 0, alignment = Tooltip.Middle 30 }
-                , arrow = Just { size = 15, color = "#000" }
+                , arrow = Just 15
                 }
 
         HoverState.Tooltip (Message.PipelinePreview _ id) _ ->
@@ -912,7 +906,7 @@ tooltip session =
                             { direction = Tooltip.Right 0
                             , alignment = Tooltip.Middle 30
                             }
-                        , arrow = Just { size = 15, color = "#000" }
+                        , arrow = Just 15
                         }
                     )
 
@@ -929,7 +923,7 @@ tooltip session =
                             { direction = Tooltip.Right 0
                             , alignment = Tooltip.Middle 30
                             }
-                        , arrow = Just { size = 15, color = "#000" }
+                        , arrow = Just 15
                         }
                     )
 
@@ -946,7 +940,7 @@ tooltip session =
                             { direction = Tooltip.Right 0
                             , alignment = Tooltip.Middle 30
                             }
-                        , arrow = Just { size = 15, color = "#000" }
+                        , arrow = Just 15
                         }
                     )
 
@@ -957,7 +951,7 @@ tooltip session =
                         Styles.cardTooltip
                         [ Html.text groupName ]
                 , attachPosition = { direction = Tooltip.Right 0, alignment = Tooltip.Middle 30 }
-                , arrow = Just { size = 15, color = "#000" }
+                , arrow = Just 15
                 }
 
         HoverState.Tooltip (Message.InstanceGroupCardNameHD _ groupName) _ ->
@@ -967,7 +961,7 @@ tooltip session =
                         Styles.cardTooltip
                         [ Html.text groupName ]
                 , attachPosition = { direction = Tooltip.Right 0, alignment = Tooltip.Middle 30 }
-                , arrow = Just { size = 15, color = "#000" }
+                , arrow = Just 15
                 }
 
         HoverState.Tooltip (Message.PipelineCardInstanceVar _ _ key value) _ ->
@@ -977,7 +971,7 @@ tooltip session =
                         Styles.cardTooltip
                         [ Html.text <| key ++ ": " ++ value ]
                 , attachPosition = { direction = Tooltip.Right 0, alignment = Tooltip.Middle 30 }
-                , arrow = Just { size = 15, color = "#000" }
+                , arrow = Just 15
                 }
 
         _ ->
