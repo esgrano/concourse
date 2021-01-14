@@ -77,7 +77,7 @@ import Ordering
 import Routes
 import ScreenSize exposing (ScreenSize(..))
 import Set
-import SideBar.SideBar as SideBar exposing (byDatabaseId, byPipelineId, lookupPipeline)
+import SideBar.SideBar as SideBar exposing (byDatabaseId, lookupPipeline)
 import StrictEvents exposing (onScroll)
 import Tooltip
 import UserState
@@ -747,21 +747,19 @@ updateBody session msg ( model, effects ) =
             , effects
             )
 
-        Click (PipelineCardPauseToggle _ pipelineId) ->
-            let
-                isPaused =
-                    session
-                        |> lookupPipeline (byPipelineId pipelineId)
-                        |> Maybe.map .paused
-            in
-            case isPaused of
-                Just ip ->
+        Click (PipelineCardPauseToggle _ id) ->
+            case session |> lookupPipeline (byDatabaseId id) of
+                Just pipeline ->
+                    let
+                        pipelineId =
+                            Concourse.toPipelineId pipeline
+                    in
                     ( updatePipeline
                         (\p -> { p | isToggleLoading = True })
                         pipelineId
                         model
                     , effects
-                        ++ [ SendTogglePipelineRequest pipelineId ip ]
+                        ++ [ SendTogglePipelineRequest pipelineId pipeline.paused ]
                     )
 
                 Nothing ->
@@ -875,6 +873,46 @@ tooltip session =
 
                                 else
                                     "expose pipeline"
+                        , attachPosition =
+                            { direction = Tooltip.Top
+                            , alignment = Tooltip.End
+                            }
+                        , arrow = Nothing
+                        }
+                    )
+
+        HoverState.Tooltip (Message.PipelineCardFavoritedIcon _ id) _ ->
+            let
+                isFavorited =
+                    Set.member id session.favoritedPipelines
+            in
+            Just
+                { body =
+                    Html.text <|
+                        if isFavorited then
+                            "unfavorite pipeline"
+
+                        else
+                            "favorite pipeline"
+                , attachPosition =
+                    { direction = Tooltip.Top
+                    , alignment = Tooltip.End
+                    }
+                , arrow = Nothing
+                }
+
+        HoverState.Tooltip (Message.PipelineCardPauseToggle _ id) _ ->
+            session
+                |> lookupPipeline (byDatabaseId id)
+                |> Maybe.map
+                    (\p ->
+                        { body =
+                            Html.text <|
+                                if p.paused then
+                                    "unpause pipeline"
+
+                                else
+                                    "pause pipeline"
                         , attachPosition =
                             { direction = Tooltip.Top
                             , alignment = Tooltip.End
